@@ -78,23 +78,23 @@ int main()
         if( percentRight == 1 )
         {
             answer = position.retrieve();
-            position = wordList.zeroth();
-            comp2pos = wordList.first();
-            while( !comp2pos.isPastEnd() )
-            {
-                wordList.remove( comp2pos.retrieve() );
-                comp2pos.advance();
-            }
+            wordList.makeEmpty();
+            EXIT = 1;
+        }
+        else if( percentRight == 0 && numWords == 2 )
+        {
+            wordList.remove( position.retrieve() );
+            answer = (wordList.first()).retrieve();
+            wordList.makeEmpty();
             EXIT = 1;
         }
         else
         {
             while( !comp2pos.isPastEnd() )
             {
-                if( compareWords( position.retrieve(), comp2pos.retrieve() ) < percentRight )
-                {
+                if( compareWords( position.retrieve(), comp2pos.retrieve() ) != percentRight 
+                    && compareWords( position.retrieve(), comp2pos.retrieve() ) != 1 )
                     wordList.remove( comp2pos.retrieve() );
-                }
                 comp2pos.advance();
             }
             wordList.remove( position.retrieve() );
@@ -107,7 +107,7 @@ int main()
             }
             else
             {
-                cout << "\nREMAINING WORDS: " << endl;
+                cout << "\nREMAINING WORDS: " << endl << endl;
                 wordList.printList();
             }
         }
@@ -116,6 +116,8 @@ int main()
         delete wordScores;
 // ** Return to "// ** Score similarity ** //" if list has more than one word left ** //
         numWords = wordList.getListLength();		// Get the current list length for array size
+        if( numWords == 0 )
+            EXIT = 1;
     }
     cout << "\nTHE PASSWORD IS " << answer << endl;
     return 0;
