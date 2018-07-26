@@ -1,8 +1,9 @@
 #include <iostream>
 #include <fstream>
 #include <string>
+#include <list>
 #include <math.h>
-#include "LL.hpp"
+//#include "LL.hpp"
 
 using namespace std;
 //***********************************************************************************************************************************
@@ -12,15 +13,16 @@ using namespace std;
 // compareWords( s1, s2 )                           --> Returns number of characters from s1,s2 that are the same ()
 // double norm( array, p )							--> Computes the p-norm of array
 // int maxIndex( array )							--> Returns the index of the largest element in array
+// void printList( wordList )						--> Prints the list to stdout
 //
 //***********************************************************************************************************************************
 
-
+// Forward declarations:
 double compareWords( string word1, string word2 );
-double ** createSimArray( List<string> wordList, double **simMat );
+double ** createSimArray( list<string> wordList, double **simMat );
 double norm(double *array, double p, int arrayLength);
 int maxIndex(double * array, int arrayLength);
-
+void printList(list<string> wordList);
 
 double compareWords( string word1, string word2 )
 {
@@ -49,31 +51,31 @@ double compareWords( string word1, string word2 )
     return percentage;
 }
 
-double ** createSimArray( List<string> wordList, double **simMat )
+double ** createSimArray( list<string> wordList, double **simMat )
 {
     int i, j;
-    if( wordList.isEmpty() )	// Double-check to make sure not passing in an empty list
+    if( wordList.empty() )	// Double-check to make sure not passing in an empty list
     {
         cout << "Error: passing empty word list into createSimArray!\n";
         return NULL;
     }
     else
     {
-        ListItr<string> position = wordList.first();	// Construct list iterators to run through list
-        ListItr<string> comp2pos = wordList.first();
-        const int listlength = wordList.getListLength();
+        list<string>::iterator position = wordList.begin();	// Construct list iterators to run through list
+        list<string>::iterator comp2pos = wordList.begin();
+        const size_t listlength = wordList.size();
         
         for( i=0; i < listlength ; i++ )
         {
             for( j=0; j < listlength ; j++ )
             {
                 
-                simMat[i][j] = compareWords( position.retrieve(), comp2pos.retrieve() );
+                simMat[i][j] = compareWords( *position, *comp2pos );
                 //cout << "simMat[" << i << "][" << j << "] = " << simMat[i][j] << endl;
-                comp2pos.advance();
+                comp2pos++;
             }
-            position.advance();
-            comp2pos = wordList.first();
+            position++;
+            comp2pos = wordList.begin();
         }
     }
     return simMat;
@@ -95,9 +97,9 @@ double norm(double *array, double p, int arrayLength)
 }
 
 
-int maxIndex(double * array, int arrayLength)
+size_t maxIndex(double * array, size_t arrayLength)
 {
-    int i = 0, Index = 0;
+    size_t i = 0, Index = 0;
     double currentGuess = 0;
     
     for( i = 0 ; i < arrayLength; i++ )
@@ -110,4 +112,11 @@ int maxIndex(double * array, int arrayLength)
     }
     
     return Index;
+}
+
+void printList(list<string> wordList)
+{
+	list<string>::iterator itr = wordList.begin();
+	for (; itr != wordList.end(); ++itr)
+		cout << *itr << endl;
 }
